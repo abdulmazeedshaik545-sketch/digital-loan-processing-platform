@@ -1,0 +1,197 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: frontend, version: v1}
+  template:
+    metadata:
+      labels: {app: frontend, version: v1}
+    spec:
+      containers:
+      - name: frontend
+        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/frontend:1.0.0
+        ports: [{containerPort: 8080}]
+        readinessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 10
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        env:
+        - name: LOAN_SERVICE_URL
+          value: http://loan-service:8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector: {app: frontend}
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loan-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: loan-service, version: v1}
+  template:
+    metadata:
+      labels: {app: loan-service, version: v1}
+    spec:
+      containers:
+      - name: loan-service
+        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/loan-service:1.0.0
+        ports: [{containerPort: 8080}]
+        readinessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 10
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        env:
+        - name: CUSTOMER_SERVICE_URL
+          value: http://customer-service:8080
+        - name: DOCUMENT_SERVICE_URL
+          value: http://document-service:8080
+        - name: NOTIFICATION_SERVICE_URL
+          value: http://notification-service:8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loan-service
+spec:
+  selector: {app: loan-service}
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: customer-service, version: v1}
+  template:
+    metadata:
+      labels: {app: customer-service, version: v1}
+    spec:
+      containers:
+      - name: customer-service
+        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/customer-service:1.0.0
+        ports: [{containerPort: 8080}]
+        readinessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 10
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        env: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+spec:
+  selector: {app: customer-service}
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: document-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: document-service, version: v1}
+  template:
+    metadata:
+      labels: {app: document-service, version: v1}
+    spec:
+      containers:
+      - name: document-service
+        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/document-service:1.0.0
+        ports: [{containerPort: 8080}]
+        readinessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 10
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        env: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: document-service
+spec:
+  selector: {app: document-service}
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: notification-service, version: v1}
+  template:
+    metadata:
+      labels: {app: notification-service, version: v1}
+    spec:
+      containers:
+      - name: notification-service
+        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/notification-service:1.0.0
+        ports: [{containerPort: 8080}]
+        readinessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 5
+        livenessProbe:
+          httpGet: {path: /health, port: 8080}
+          initialDelaySeconds: 10
+        resources:
+          requests: {cpu: 100m, memory: 128Mi}
+          limits: {cpu: 500m, memory: 256Mi}
+        env: []
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector: {app: notification-service}
+  ports:
+  - port: 8080
+    targetPort: 8080

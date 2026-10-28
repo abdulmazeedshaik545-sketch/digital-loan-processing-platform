@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: loan-service
+spec:
+  hosts:
+  - loan-service
+  http:
+  - route:
+    - destination:
+        host: loan-service
+        subset: v1
+      weight: 90
+    - destination:
+        host: loan-service
+        subset: v2
+      weight: 10

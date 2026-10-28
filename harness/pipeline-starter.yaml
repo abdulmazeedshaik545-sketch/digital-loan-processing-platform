@@ -1,0 +1,41 @@
+# STARTER SKETCH: adapt connector IDs, step types, and GAR authentication
+# in Harness Pipeline Studio for your account before running.
+pipeline:
+  name: loan-platform-ci
+  identifier: loan_platform_ci
+  projectIdentifier: YOUR_HARNESS_PROJECT
+  orgIdentifier: default
+  stages:
+    - stage:
+        name: Build_Test_Scan
+        identifier: build_test_scan
+        type: CI
+        spec:
+          cloneCodebase: true
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Compile and test
+                  identifier: compile_test
+                  spec:
+                    shell: Bash
+                    command: |
+                      python -m compileall services
+                      for service in services/*; do
+                        if [ -f "$service/requirements.txt" ]; then
+                          python -m pip install -r "$service/requirements.txt"
+                          python -m pip install pytest
+                          (cd "$service" && python -m pytest -q) || test $? -eq 5
+                        fi
+                      done
+              # Add approved security scan step here.
+              # Add Docker build/push steps for each service using immutable
+              # tags such as <+codebase.commitSha> and your GAR connector.
+              # Then clone the separate GitOps repo, update image tags,
+              # commit and push. Argo CD performs the actual deployment.
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Cloud

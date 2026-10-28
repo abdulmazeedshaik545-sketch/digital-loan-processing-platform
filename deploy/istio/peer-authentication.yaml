@@ -1,0 +1,9 @@
+# Apply only after verifying every intended workload is enrolled in the mesh.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: loan-platform
+spec:
+  mtls:
+    mode: STRICT
