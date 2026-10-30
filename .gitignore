@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+
+# Local backups and credentials
+*.backup
+*.bak
+.env.*
+!.env.example
+*.pem
+*.key
+service-account*.json
+credentials*.json

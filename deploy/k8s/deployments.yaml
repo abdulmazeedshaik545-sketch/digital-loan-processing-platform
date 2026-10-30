@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/frontend:1.0.0
+        image: us-central1-docker.pkg.dev/project-kuber-513108/loan-platform/frontend:1.0.0
         ports: [{containerPort: 8080}]
         readinessProbe:
           httpGet: {path: /health, port: 8080}
@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
       - name: loan-service
-        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/loan-service:1.0.0
+        image: us-central1-docker.pkg.dev/project-kuber-513108/loan-platform/loan-service:1.0.1
         ports: [{containerPort: 8080}]
         readinessProbe:
           httpGet: {path: /health, port: 8080}
@@ -71,6 +71,13 @@ spec:
           value: http://document-service:8080
         - name: NOTIFICATION_SERVICE_URL
           value: http://notification-service:8080
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+        - name: DATABASE_URL
+          value: postgresql://loanapp:$(POSTGRES_PASSWORD)@postgres:5432/loans
 ---
 apiVersion: v1
 kind: Service
@@ -97,7 +104,7 @@ spec:
     spec:
       containers:
       - name: customer-service
-        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/customer-service:1.0.0
+        image: us-central1-docker.pkg.dev/project-kuber-513108/loan-platform/customer-service:1.0.0
         ports: [{containerPort: 8080}]
         readinessProbe:
           httpGet: {path: /health, port: 8080}
@@ -135,7 +142,7 @@ spec:
     spec:
       containers:
       - name: document-service
-        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/document-service:1.0.0
+        image: us-central1-docker.pkg.dev/project-kuber-513108/loan-platform/document-service:1.0.0
         ports: [{containerPort: 8080}]
         readinessProbe:
           httpGet: {path: /health, port: 8080}
@@ -173,7 +180,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: REGION-docker.pkg.dev/PROJECT_ID/loan-platform/notification-service:1.0.0
+        image: us-central1-docker.pkg.dev/project-kuber-513108/loan-platform/notification-service:1.0.0
         ports: [{containerPort: 8080}]
         readinessProbe:
           httpGet: {path: /health, port: 8080}
