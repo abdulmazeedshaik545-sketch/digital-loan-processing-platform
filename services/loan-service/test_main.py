@@ -197,4 +197,3 @@ def test_create_loan_document_validation_failure(client, monkeypatch):
 
     assert response.status_code == 200
     assert response.json()["status"] == "pending_documents"
-    # Verify Harness GitHub push trigger
