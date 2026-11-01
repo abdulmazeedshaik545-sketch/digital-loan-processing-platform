@@ -21,7 +21,7 @@ def mock_db(monkeypatch):
     monkeypatch.setattr(main, "get_connection", lambda: connection)
     return connection
 
-
+# health function test
 def test_health_success(client, mock_db):
     response = client.get("/health")
 
