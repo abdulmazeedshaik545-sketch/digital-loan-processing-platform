@@ -88,6 +88,8 @@ def test_create_loan_success(client, monkeypatch, mock_db):
             pass
 
     class FakeAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
         async def __aenter__(self):
             return self
 
@@ -139,6 +141,8 @@ def test_create_loan_unknown_customer(client, monkeypatch):
             return {}
 
     class FakeAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
         async def __aenter__(self):
             return self
 
@@ -174,6 +178,8 @@ def test_create_loan_document_validation_failure(client, monkeypatch):
             return self.data
 
     class FakeAsyncClient:
+        def __init__(self, *args, **kwargs):
+            pass
         async def __aenter__(self):
             return self
 
