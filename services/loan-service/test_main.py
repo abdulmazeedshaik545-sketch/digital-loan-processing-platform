@@ -167,7 +167,7 @@ def test_create_loan_unknown_customer(client, monkeypatch):
     assert "Unknown customer_id" in response.json()["detail"]
 
 
-def test_create_loan_document_validation_failure(client, monkeypatch):
+def test_create_loan_document_validation_failure(client, monkeypatch, mock_db):
     class FakeResponse:
         status_code = 200
 
